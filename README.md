@@ -2,6 +2,8 @@
 This is an automation testing project.  
 User can buy tools for repairing — and we test that it works as expected.
 
+AQA of this project is Barylska Sofiia
+
 ## 🛠️ How install a project?
 1.Install nodeJS
 2.Install VS Code
