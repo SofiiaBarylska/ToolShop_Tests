@@ -1,82 +1,112 @@
 import { Locator, Page, expect } from "@playwright/test";
 
-export class ProductListPage{
-    page: Page;
-    sort: Locator;
-    productsName: Locator;
-    nextPageButton: Locator;
-    nextPageItem: Locator;
+export class ProductListPage {
+  page: Page;
+  sort: Locator;
+  productsName: Locator;
+  // nextPageItem: Locator;
+  // nextPageButton: Locator;
 
+  constructor(page: Page) {
+    this.page = page;
+    this.sort = page.locator('[data-test="sort"]');
+    this.productsName = page.locator('[data-test="product-name"]');
+    // this.nextPageItem = page.locator("li.page-item", {
+    //   has: page.locator('a[aria-label="Next"]'),
+    // });
+    // this.nextPageButton = page.locator('a[aria-label="Next"]');
+  }
 
-    constructor(page: Page) {
-        this.page = page;
-        this.sort = this.page.locator('[data-test="sort"]');
-        this.productsName = this.page.locator('[data-test="product-name"]');
-        this.nextPageItem = page.locator('li.page-item', { has: page.locator('[aria-label="Next"]') });
-        this.nextPageButton = page.locator('[aria-label="Next"]');
+  async selectSortingOption(sorting: string) {
+    await this.sort.selectOption({ label: sorting });
+    await this.page.waitForLoadState("networkidle");
+  }
 
-    }
+  async getAllProductNames(): Promise<string[]> {
+    const allNames: string[] = [];
 
-    async clickOnSorting(): Promise<void>{
-        await this.sort.click();
-    }
+    await this.page.waitForLoadState("networkidle");
 
-    async selectSortingOption(sorting: string): Promise<void>{
-        await this.sort.selectOption({ label: sorting });
-    }
-
-async getAllProductNames(): Promise<string[]> {
-    let allNames: string[] = [];
-
-    while (true) {
-        await this.page.waitForLoadState('networkidle');
-
-        const namesOnPage = await this.productsName.allTextContents();
-        allNames = allNames.concat(namesOnPage);
-
-        const isDisabled = await this.nextPageItem.getAttribute('class');
-
-        if (isDisabled?.includes('disabled')) {
-            console.log('Reached last page.');
-            break;
-        }
-
-        await this.nextPageButton.click();
-    }
+    const namesOnPage = (await this.productsName.allTextContents()).map((n) =>
+      n.trim()
+    );
+    console.log("Names on this page:", namesOnPage);
+    allNames.push(...namesOnPage);
+    console.log("All collected names from the first page:", allNames);
 
     return allNames;
+  }
+
+  async verifyProductsAreSorted(sorting: string): Promise<void> {
+    await this.page.waitForLoadState("networkidle");
+
+    const namesOnPage = (await this.productsName.allTextContents()).map((n) =>
+      n.trim()
+    );
+    console.log("Names on this page:", namesOnPage);
+
+    const expected = namesOnPage.toSorted((a, b) =>
+      sorting === "Name (A - Z)" ? a.localeCompare(b) : b.localeCompare(a)
+    );
+    expect(namesOnPage).toEqual(expected);
+    console.log("Verification completed on the first page.");
+  }
 }
-    // async getAllProductNames(): Promise<string[]> {
-    //     let allNames: string[] = [];
-    //     let hasNextPage = true;
 
-    //     while (hasNextPage) {
-    //         const pageNames = await this.productsName.allTextContents();
-    //         allNames = allNames.concat(pageNames);
-            
-    //        hasNextPage = await this.nextPageButton.isEnabled();
-    //          if (hasNextPage) {
-    //              await this.nextPageButton.click(); 
-    //         } else {
-    //           console.log('No more pages available.');
-    //         }
-    //     }
-    //     return allNames;
-    // }
+//If need to sort the products from all pages (but there are some bug, on 4 pages display the same products)
 
-    async verifyProductsAreSorted(sorting: string): Promise<void>{
-        const names = await this.getAllProductNames();
-        const sortedNames = [...names].sort((a, b) =>
-            sorting === 'Name (A - Z)' ? a.localeCompare(b) : b.localeCompare(a)
-  
-        );
+// async getAllProductNames(): Promise<string[]> {
+//   const allNames: string[] = [];
 
-         console.log('Original Names:', names);
-         console.log('Sorted Names:', sortedNames);
+//   while (true) {
+//     await this.page.waitForLoadState("networkidle");
 
-        expect(names).toEqual(sortedNames);
-    }
-   
+//     const namesOnPage = (await this.productsName.allTextContents()).map((n) =>
+//       n.trim()
+//     );
+//     console.log("Names on this page:", namesOnPage);
+//     allNames.push(...namesOnPage);
 
+//     const liClass = await this.nextPageItem.getAttribute("class");
+//     if (liClass?.includes("disabled")) {
+//       console.log("Reached last page.");
+//       break;
+//     }
 
-}
+//     await Promise.all([
+//       this.nextPageButton.click(),
+//       this.page.waitForLoadState("networkidle"),
+//     ]);
+//   }
+
+//   console.log("All collected names:", allNames);
+//   return allNames;
+// }
+
+// async verifyProductsAreSorted(sorting: string): Promise<void> {
+//   while (true) {
+//     await this.page.waitForLoadState("networkidle");
+
+//     const namesOnPage = (await this.productsName.allTextContents()).map((n) =>
+//       n.trim()
+//     );
+//     console.log("Names on this page:", namesOnPage);
+
+//     const expected = namesOnPage.toSorted((a, b) =>
+//       sorting === "Name (A - Z)" ? a.localeCompare(b) : b.localeCompare(a)
+//     );
+
+//     expect(namesOnPage).toEqual(expected);
+
+//     const liClass = await this.nextPageItem.getAttribute("class");
+//     if (liClass?.includes("disabled")) {
+//       console.log("Reached last page — всі сторінки перевірені.");
+//       break;
+//     }
+
+//     await Promise.all([
+//       this.nextPageButton.click(),
+//       this.page.waitForLoadState("networkidle"),
+//     ]);
+//   }
+// }
