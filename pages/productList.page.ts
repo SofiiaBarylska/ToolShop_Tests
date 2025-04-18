@@ -4,6 +4,7 @@ export class ProductListPage {
   page: Page;
   sort: Locator;
   productsName: Locator;
+  productPrice: Locator;
   // nextPageItem: Locator;
   // nextPageButton: Locator;
 
@@ -11,6 +12,7 @@ export class ProductListPage {
     this.page = page;
     this.sort = page.locator('[data-test="sort"]');
     this.productsName = page.locator('[data-test="product-name"]');
+    this.productPrice = page.locator('[data-test="product-price"]');
     // this.nextPageItem = page.locator("li.page-item", {
     //   has: page.locator('a[aria-label="Next"]'),
     // });
@@ -20,21 +22,6 @@ export class ProductListPage {
   async selectSortingOption(sorting: string) {
     await this.sort.selectOption({ label: sorting });
     await this.page.waitForLoadState("networkidle");
-  }
-
-  async getAllProductNames(): Promise<string[]> {
-    const allNames: string[] = [];
-
-    await this.page.waitForLoadState("networkidle");
-
-    const namesOnPage = (await this.productsName.allTextContents()).map((n) =>
-      n.trim()
-    );
-    console.log("Names on this page:", namesOnPage);
-    allNames.push(...namesOnPage);
-    console.log("All collected names from the first page:", allNames);
-
-    return allNames;
   }
 
   async verifyProductsAreSorted(sorting: string): Promise<void> {
@@ -51,10 +38,34 @@ export class ProductListPage {
     expect(namesOnPage).toEqual(expected);
     console.log("Verification completed on the first page.");
   }
+
+
+  async verifyProductPricesSorted(sorting: string): Promise<void> {
+    await this.page.waitForLoadState("networkidle");
+
+    const pricesText = await this.productPrice.allTextContents();
+
+    const pricesOnPage = pricesText.map((text) => {
+      return parseFloat(text.replace("$", "").trim());
+    });
+
+    console.log("Prices on the page:", pricesOnPage);
+    
+    const expected = pricesOnPage.toSorted((a, b) =>
+      sorting === "Price (Low - High)" ? a - b : b - a
+    );
+
+    expect(pricesOnPage).toEqual(expected);
+    console.log("Verification completed on the first page.");
+  }
+
+
+
 }
 
-//If need to sort the products from all pages (but there are some bug, on 4 pages display the same products)
+//If need to sort the products and check on all pages (but there are some bug, on 4 pages display the first products and on 5 page display product  from second page)
 
+  
 // async getAllProductNames(): Promise<string[]> {
 //   const allNames: string[] = [];
 
