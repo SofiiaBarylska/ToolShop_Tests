@@ -28,7 +28,7 @@ export class Cart{
     }
     
     async goToCheckout(): Promise<void>{
-        await (this.checkoutButton).click();
+        await this.checkoutButton.click();
     }
 
 

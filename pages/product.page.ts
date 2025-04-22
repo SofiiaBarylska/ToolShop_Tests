@@ -35,13 +35,12 @@ export class ProductPage{
     }
 
     async addProductToCart():Promise<void> {
-        await (this.addToCartButton).click();
+        await this.addToCartButton.click();
     }
 
     async verifyAlert(alert:string): Promise<void>{
         await expect(this.productAlert).toBeVisible();
         await expect(this.productAlert).toContainText(alert);
-        await this.page.waitForTimeout(8000);
-        await expect(this.productAlert).toBeHidden();
+        await expect(this.productAlert).toBeHidden({ timeout: 8000 });
             }
 }

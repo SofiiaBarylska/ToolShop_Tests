@@ -5,18 +5,14 @@ export class ProductListPage {
   sort: Locator;
   productsName: Locator;
   productPrice: Locator;
-  // nextPageItem: Locator;
-  // nextPageButton: Locator;
+
 
   constructor(page: Page) {
     this.page = page;
     this.sort = page.locator('[data-test="sort"]');
     this.productsName = page.locator('[data-test="product-name"]');
     this.productPrice = page.locator('[data-test="product-price"]');
-    // this.nextPageItem = page.locator("li.page-item", {
-    //   has: page.locator('a[aria-label="Next"]'),
-    // });
-    // this.nextPageButton = page.locator('a[aria-label="Next"]');
+ 
   }
 
   async selectSortingOption(sorting: string) {
@@ -63,61 +59,3 @@ export class ProductListPage {
 
 }
 
-//If need to sort the products and check on all pages (but there are some bug, on 4 pages display the first products and on 5 page display product  from second page)
-
-  
-// async getAllProductNames(): Promise<string[]> {
-//   const allNames: string[] = [];
-
-//   while (true) {
-//     await this.page.waitForLoadState("networkidle");
-
-//     const namesOnPage = (await this.productsName.allTextContents()).map((n) =>
-//       n.trim()
-//     );
-//     console.log("Names on this page:", namesOnPage);
-//     allNames.push(...namesOnPage);
-
-//     const liClass = await this.nextPageItem.getAttribute("class");
-//     if (liClass?.includes("disabled")) {
-//       console.log("Reached last page.");
-//       break;
-//     }
-
-//     await Promise.all([
-//       this.nextPageButton.click(),
-//       this.page.waitForLoadState("networkidle"),
-//     ]);
-//   }
-
-//   console.log("All collected names:", allNames);
-//   return allNames;
-// }
-
-// async verifyProductsAreSorted(sorting: string): Promise<void> {
-//   while (true) {
-//     await this.page.waitForLoadState("networkidle");
-
-//     const namesOnPage = (await this.productsName.allTextContents()).map((n) =>
-//       n.trim()
-//     );
-//     console.log("Names on this page:", namesOnPage);
-
-//     const expected = namesOnPage.toSorted((a, b) =>
-//       sorting === "Name (A - Z)" ? a.localeCompare(b) : b.localeCompare(a)
-//     );
-
-//     expect(namesOnPage).toEqual(expected);
-
-//     const liClass = await this.nextPageItem.getAttribute("class");
-//     if (liClass?.includes("disabled")) {
-//       console.log("Reached last page — всі сторінки перевірені.");
-//       break;
-//     }
-
-//     await Promise.all([
-//       this.nextPageButton.click(),
-//       this.page.waitForLoadState("networkidle"),
-//     ]);
-//   }
-// }
