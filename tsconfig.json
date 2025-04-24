@@ -10,5 +10,5 @@
     "forceConsistentCasingInFileNames": true,
     "outDir": "dist"
   },
-  "include": ["env.d.ts","**/*.ts"]
+  "include": ["typings/env.d.ts","**/*.ts"]
 }
