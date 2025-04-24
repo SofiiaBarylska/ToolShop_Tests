@@ -6,7 +6,7 @@ import { ProductListPage } from "../pages/productList.page";
 ].forEach(({sorting}) => {
     test(`Products correct sorting by ${sorting}`, async ({ page }) => {
         const productListPage = new ProductListPage(page);
-        await page.goto("/");
+        await page.goto(process.env.WEB_URL!);
        await productListPage.selectSortingOption(sorting);
         await productListPage.verifyProductPricesSorted(sorting);
 

@@ -5,7 +5,7 @@ import { Cart } from '../pages/cart.page';
 test('User can add product to cart', async ({ page }) => {
     const productPage = new ProductPage(page);
 
-    await page.goto('/');
+    await page.goto(process.env.WEB_URL!);
     await productPage.openProduct('Slip Joint Pliers');
     await productPage.verifyProductDetails('Slip Joint Pliers', 9.17)
     await productPage.addProductToCart();
