@@ -59,6 +59,7 @@ export class ProductListPage {
 
   async verifyProductNamesContain(subcategory: string): Promise<void> {
     const names = await this.getProductNames();
+    console.log("Names after filtering by subcategory:", names);
     for (const name of names) {
       expect(name).toContain(subcategory);
     }
