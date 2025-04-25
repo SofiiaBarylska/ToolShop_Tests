@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { test } from '@playwright/test';
 import { ProductPage } from '../pages/product.page';
 
 test('User can view products details', async ({ page }) => {
