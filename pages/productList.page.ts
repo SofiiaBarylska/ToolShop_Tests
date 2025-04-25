@@ -6,12 +6,17 @@ export class ProductListPage {
   sort: Locator;
   productsName: Locator;
   productPrice: Locator;
+  readonly filters: ProductFiltersFragment;
 
   constructor(page: Page) {
     this.page = page;
     this.sort = page.locator('[data-test="sort"]');
     this.productsName = page.locator('[data-test="product-name"]');
     this.productPrice = page.locator('[data-test="product-price"]');
+
+    //Initialisation of fragment
+
+    this.filters = new ProductFiltersFragment(page);
   }
 
   async selectSortingOption(sorting: string) {
