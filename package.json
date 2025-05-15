@@ -12,6 +12,7 @@
   "description": "",
   "devDependencies": {
     "@eslint/js": "^9.25.1",
+    "@faker-js/faker": "^9.7.0",
     "@playwright/test": "^1.51.1",
     "@types/node": "^22.14.0",
     "dotenv": "^16.5.0",
