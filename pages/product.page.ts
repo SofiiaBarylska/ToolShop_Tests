@@ -24,6 +24,11 @@ export class ProductPage {
     await expect(this.page).toHaveURL(/\/product/);
   }
 
+  async goToProduct(): Promise<void> {
+    await this.productName.first().click();
+    await expect(this.page).toHaveURL(/\/product/);
+  }
+
   async verifyProductDetails(title: string, price: number): Promise<void> {
     await expect(this.productName).toContainText(title);
     await expect(this.unitPrice).toHaveText(price.toFixed(2));
