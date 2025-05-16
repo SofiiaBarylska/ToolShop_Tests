@@ -5,12 +5,15 @@ export class HeaderFragment {
     cartIcon: Locator;
     cartQTY: Locator;
     iconAccount: Locator;
+    pageTitle: Locator;
     
     constructor(page: Page) {
         this.page = page;
         this.cartIcon = page.locator('[data-test="nav-cart"]');
         this.cartQTY = page.locator('[data-test="nav-cart"]');
         this.iconAccount = page.locator('[data-test="nav-menu"]');
+        this.pageTitle = page.locator('[data-test="page-title"]');
+
     }
     
      async goToCart(): Promise<void>{
@@ -26,6 +29,10 @@ export class HeaderFragment {
 
     async checkAccount(user: string): Promise<void> {
         await expect(this.iconAccount).toHaveText(user);
+    }
+
+    async checkPageTitle(title: string): Promise<void> {
+        await expect (this.pageTitle).toHaveText(title);
     }
 
 
