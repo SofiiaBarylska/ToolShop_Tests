@@ -7,7 +7,8 @@ import { CREDIT_CARD } from '../typings/paymentData';
 
 test('The user purchased the product ', async ({ loggedInApp })=> {
     await loggedInApp.page.goto('/');
-    await loggedInApp.productPage.openProduct('Combination Pliers');
+    await loggedInApp.productPage.goToProduct();
+    //await loggedInApp.productPage.openProduct('Combination Pliers');
     const productTitle = await loggedInApp.productPage.getProductTitle();
     const productPrice = await loggedInApp.productPage.getProductPrice();
 
